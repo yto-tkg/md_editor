@@ -8,7 +8,12 @@
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:tailwindcss/recommended"
+  ],
+    // tailwind.config.js などの config ファイル、ESLint の対象外にする
+  "ignorePatterns": [
+    "*.config.js"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",

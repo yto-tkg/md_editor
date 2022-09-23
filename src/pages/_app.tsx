@@ -1,6 +1,8 @@
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import "tailwindcss/tailwind.css"
+import "../styles/markdown.css"
 
 // グローバルのスタイル
 const GlobalStyle = createGlobalStyle`
@@ -11,20 +13,6 @@ textarea {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-a {
-  cursor: pointer;
-  text-decoration: none;
-  transition: .25s;
-}
-
-ol, ul {
-  list-style: none;
 }
 `
 
