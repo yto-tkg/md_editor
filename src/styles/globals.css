@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background: #e3f6f5;
+}
+
+.submit-post {
+  background: #ffd803;
+}

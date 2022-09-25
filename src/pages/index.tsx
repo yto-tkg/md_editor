@@ -1,11 +1,24 @@
 import type { NextPage } from 'next'
-import PostForm from 'components/organisms/PostForm'
+import { useRouter } from 'next/router'
+import Layout from 'components/templates/Layout'
+import PostFormContainer from 'containers/PostFormContainer'
 
 const Home: NextPage = () => {
+  const router = useRouter()
+
+  const handleSave = (err?: Error) => {
+    if (!err) {
+      router.push(`/`)
+    }
+  }
+
   return (
     <>
-      <PostForm></PostForm>
+      <Layout>
+        <PostFormContainer onSave={handleSave} />
+      </Layout>
     </>
   )
 }
+
 export default Home
