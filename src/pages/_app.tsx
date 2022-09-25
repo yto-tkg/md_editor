@@ -1,8 +1,9 @@
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import "tailwindcss/tailwind.css"
-import "../styles/markdown.css"
+import 'tailwindcss/tailwind.css'
+import '../styles/globals.css'
+import '../styles/markdown.css'
 
 // グローバルのスタイル
 const GlobalStyle = createGlobalStyle`
