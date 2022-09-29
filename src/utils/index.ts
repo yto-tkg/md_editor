@@ -4,6 +4,9 @@ export const fetcher = async (
 ): Promise<any> => {
   const res = await fetch(resource, init)
 
+  console.log('=====================================================================')
+  console.log(res)
+
   if (!res.ok) {
     const errorRes = await res.json()
     const error = new Error(
