@@ -12,23 +12,26 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
     return (
       <>
         <table>
-          <tr>
-            <th>title</th>
-            <th>content</th>
-            <th>register time</th>
-            <th>update time</th>
-          </tr>
-          <tr>
-            {markdowns.map((m: Markdown, i: number) => (
-              <>
-                <td>{m.title}</td>
-                <td>{m.body}</td>
-                <td>{m.createdAt}</td>
-                <td>{m.updatedAt}</td>
-                <Link href={`/data/${m.id}`}>refer</Link>
-              </>
-            ))}
-          </tr>
+          <tbody>
+            <tr>
+              <th>title</th>
+              <th>content</th>
+              <th>register time</th>
+              <th>update time</th>
+              <th>refer</th>
+            </tr>
+          </tbody>
+          <tbody>
+              {markdowns.map((m: Markdown, i: number) => (
+                <tr>
+                  <td>{m.title}</td>
+                  <td>{m.body}</td>
+                  <td>{m.createdAt}</td>
+                  <td>{m.updatedAt}</td>
+                  <td><Link href={`/data/${m.id}`}><a>refer</a></Link></td>
+                </tr>
+              ))}
+          </tbody>
         </table>
       </>
     )
@@ -36,7 +39,7 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
 
   return (
     <>
-      <Layout>{renderDataCarousel(allMarkdowns)}</Layout>
+      <Layout>{renderDataCarousel(allMarkdowns.data)}</Layout>
     </>
   )
 }
