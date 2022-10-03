@@ -6,6 +6,14 @@ import { ApiContext, Markdown } from 'types/data'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
+ const [searchData, setSearchData] = useState()
+
+  const setSearchData = (e: any) => {
+    e.preventDefault()
+
+    setSearchData(e.target.value)
+  }
+
 const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
   // データカルーセルをレンダリング
   const renderDataCarousel = (markdowns: Markdown[]) => {
@@ -39,7 +47,15 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
 
   return (
     <>
-      <Layout>{renderDataCarousel(allMarkdowns.data)}</Layout>
+      <Layout>
+        <div>検索: 
+          <form onSubmit={}>
+          <textarea placeholder='タイトル検索' value={searchData} onChange={setSearchData}></textarea>
+          <input type="submit" value="検索" />
+          </form>
+        </div>
+        {renderDataCarousel(allMarkdowns.data)}
+      </Layout>
     </>
   )
 }
