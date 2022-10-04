@@ -10,7 +10,7 @@ export type UseSearchProps = {
   /**
    * ソートキー
    */
-  sort?: keyof Omit<Markdown, ''>
+  sort?: "id" | "title" | "createdAt" | "updatedAt"
 
   /**
    * 昇順or降順
