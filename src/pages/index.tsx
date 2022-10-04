@@ -3,16 +3,24 @@ import Link from 'next/link'
 import Layout from 'components/templates/Layout'
 import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
- const [searchData, setSearchData] = useState()
+const [searchData, setSearchData] = useState()
+const setData = (e: any) => {
+  e.preventDefault()
 
-  const setSearchData = (e: any) => {
-    e.preventDefault()
+  setSearchData(e.target.value)
+}
 
-    setSearchData(e.target.value)
+const router = useRouter()
+const handleSubmit = (err?: Error) => {
+  if (!err) {
+    router.push(`/data/search`)
   }
+}
 
 const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
   // データカルーセルをレンダリング
@@ -30,15 +38,15 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
             </tr>
           </tbody>
           <tbody>
-              {markdowns.map((m: Markdown, i: number) => (
-                <tr>
-                  <td>{m.title}</td>
-                  <td>{m.body}</td>
-                  <td>{m.createdAt}</td>
-                  <td>{m.updatedAt}</td>
-                  <td><Link href={`/data/${m.id}`}><a>refer</a></Link></td>
-                </tr>
-              ))}
+            {markdowns.map((m: Markdown, i: number) => (
+              <tr>
+                <td>{m.title}</td>
+                <td>{m.body}</td>
+                <td>{m.createdAt}</td>
+                <td>{m.updatedAt}</td>
+                <td><Link href={`/data/${m.id}`}><a>refer</a></Link></td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </>
@@ -48,10 +56,10 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
   return (
     <>
       <Layout>
-        <div>検索: 
-          <form onSubmit={}>
-          <textarea placeholder='タイトル検索' value={searchData} onChange={setSearchData}></textarea>
-          <input type="submit" value="検索" />
+        <div>検索:
+          <form onSubmit={handleSubmit}>
+            <textarea placeholder='タイトル検索' value={searchData} onChange={setData}></textarea>
+            <input type="submit" value="検索" />
           </form>
         </div>
         {renderDataCarousel(allMarkdowns.data)}
