@@ -47,10 +47,14 @@ const getAllMarkdowns = async (
   const params = new URLSearchParams()
 
   title && params.append('title', title)
-  sort && params.append('_sort', sort)
-  order && params.append('_order', order)
-  offset && params.append('_offset', `${offset}`)
-  size && params.append('_size', `${size}`)
+  sort && params.append('sort', sort)
+  order && params.append('order', order)
+  params.append('offset', `${offset}`)
+  size && params.append('size', `${size}`)
+  
+  console.log('=====================================================================')
+  console.log(params)
+  
   const query = params.toString()
 
   return await fetcher(query.length > 0 ? `${path}?${query}` : path, {
