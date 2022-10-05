@@ -11,13 +11,13 @@ interface SearchFormContainerProps {
   /**
    * 検索ボタンが押下されたときのイベントハンドラ
    */
-  onSumbit?: (error?: Error, searchData?: Markdown[]) => void
+  onSubmit?: (error?: Error, searchData?: Markdown[]) => void
 }
 
 /**
  * 検索フォームコンテナ
  */
-const SearchFormContainer = ({ onSumbit }: SearchFormContainerProps) => {
+const SearchFormContainer = ({ onSubmit }: SearchFormContainerProps) => {
 
   const handleSearch = async (data: SearchFormData) => {
 
@@ -26,22 +26,25 @@ const SearchFormContainer = ({ onSumbit }: SearchFormContainerProps) => {
       title: data.title,
       sort: data.sort,
       order: data.order,
-      offset: data.offset,
-      size: data.size,
+      offset: Number(data.offset),
+      size: Number(data.size),
     }
 
     try {
-      const { markdowns, isLoading } = await useSearch(context, { searchData })
-      onSumbit && onSumbit(undefined, markdowns)
+      const { markdowns, isLoading } = await useSearch(context, { ...searchData })
+      onSubmit && onSubmit(undefined, markdowns)
     } catch (err: unknown) {
       if (err instanceof Error) {
         window.alert(err.message)
-        onSumbit && onSumbit(err)
+        onSubmit && onSubmit(err)
       }
     }
-
-    return <SearchForm onSearchSubmit={handleSearch} />
   }
+  
+  return (
+    <SearchForm onSearchSubmit={handleSearch} />
+  )
+
 }
 
 export default SearchFormContainer

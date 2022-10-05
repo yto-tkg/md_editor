@@ -4,25 +4,12 @@ import Layout from 'components/templates/Layout'
 import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
-const [searchData, setSearchData] = useState()
-const setData = (e: any) => {
-  e.preventDefault()
-
-  setSearchData(e.target.value)
-}
-
-const router = useRouter()
-const handleSubmit = (err?: Error) => {
-  if (!err) {
-    router.push(`/data/search`)
-  }
-}
-
 const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
+
+
   // データカルーセルをレンダリング
   const renderDataCarousel = (markdowns: Markdown[]) => {
     return (
@@ -39,7 +26,7 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
           </tbody>
           <tbody>
             {markdowns.map((m: Markdown, i: number) => (
-              <tr>
+              <tr key={m.id}>
                 <td>{m.title}</td>
                 <td>{m.body}</td>
                 <td>{m.createdAt}</td>
@@ -56,12 +43,7 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
   return (
     <>
       <Layout>
-        <div>検索:
-          <form onSubmit={handleSubmit}>
-            <textarea placeholder='タイトル検索' value={searchData} onChange={setData}></textarea>
-            <input type="submit" value="検索" />
-          </form>
-        </div>
+        <Link href={`/search`}>検索</Link>
         {renderDataCarousel(allMarkdowns.data)}
       </Layout>
     </>
@@ -77,7 +59,7 @@ export const getStaticProps: GetStaticProps = async () => {
   // TODO offset, sizeは変更できるように(もっとみる)
   // トップ10件取得し、静的ページを作成
   // 30秒でrevalidateな状態にし、静的ページを更新する
-  const allMarkdowns = await getAllMarkdowns(context, { offset: 0, size: 10 })
+  const allMarkdowns = await getAllMarkdowns(context, { sort: 'id', order: 'desc', offset: 0, size: 10 })
 
   return {
     props: {
