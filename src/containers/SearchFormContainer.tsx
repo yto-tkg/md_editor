@@ -1,7 +1,6 @@
-import useSearch, { UseSearchProps } from "services/markdown/use-search-data";
 import { ApiContext, Markdown } from "types/data";
 import SearchForm, { SearchFormData } from "components/organisms/SearchForm"
-
+import getAllMarkdowns from "services/markdown/get-all-data";
 
 const context: ApiContext = {
   apiRootUrl: process.env.API_BASE_URL || '/api/proxy',
@@ -11,7 +10,7 @@ interface SearchFormContainerProps {
   /**
    * 検索ボタンが押下されたときのイベントハンドラ
    */
-  onSubmit?: (error?: Error, searchData?: Markdown[]) => void
+  onSubmit: (searchData: Markdown[], error?: Error) => void
 }
 
 /**
@@ -20,23 +19,22 @@ interface SearchFormContainerProps {
 const SearchFormContainer = ({ onSubmit }: SearchFormContainerProps) => {
 
   const handleSearch = async (data: SearchFormData) => {
-
     // 検索ボタン押下したとき
     const searchData = {
       title: data.title,
-      sort: data.sort,
-      order: data.order,
-      offset: Number(data.offset),
-      size: Number(data.size),
+      sort: data.sort ?? 'id',
+      order: data.order ?? 'desc',
+      offset: !!data.offset ? Number(data.offset) : 0,
+      size: !!data.size ? Number(data.size) : 100,
     }
 
     try {
-      const { markdowns, isLoading } = await useSearch(context, { ...searchData })
-      onSubmit && onSubmit(undefined, markdowns)
+      const markdowns = await getAllMarkdowns(context, { ...searchData })
+      onSubmit && onSubmit(markdowns, undefined)
     } catch (err: unknown) {
       if (err instanceof Error) {
         window.alert(err.message)
-        onSubmit && onSubmit(err)
+        onSubmit && onSubmit([], err)
       }
     }
   }
