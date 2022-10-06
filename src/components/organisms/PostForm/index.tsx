@@ -49,10 +49,10 @@ const PostForm = ({ onPostSave }: PostFormProps) => {
             id="post-title"
             placeholder="Title"
             className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
-            //hasError={!!errors.title}
+          //hasError={!!errors.title}
           />
           {errors.title && (
-            <div style={{ color: 'red' }}>Title is required</div>
+            <div style={{ color: 'red' }}>Title is required.</div>
           )}
           <div className="flex justify-between">
             <div className="mx-10 w-1/2">
@@ -68,7 +68,7 @@ const PostForm = ({ onPostSave }: PostFormProps) => {
                 onChange={setData}
               ></textarea>
               {errors.body && (
-                <div style={{ color: 'red' }}>Cotent is required</div>
+                <div style={{ color: 'red' }}>Cotent is required.</div>
               )}
             </div>
             <div className="mr-10 w-1/2">

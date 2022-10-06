@@ -3,43 +3,27 @@ import Link from 'next/link'
 import Layout from 'components/templates/Layout'
 import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
+import { useRouter } from 'next/router'
+import DataList from 'components/organisms/DataList'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
 const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
+
+
   // データカルーセルをレンダリング
   const renderDataCarousel = (markdowns: Markdown[]) => {
     return (
-      <>
-        <table>
-          <tbody>
-            <tr>
-              <th>title</th>
-              <th>content</th>
-              <th>register time</th>
-              <th>update time</th>
-              <th>refer</th>
-            </tr>
-          </tbody>
-          <tbody>
-              {markdowns.map((m: Markdown, i: number) => (
-                <tr>
-                  <td>{m.title}</td>
-                  <td>{m.body}</td>
-                  <td>{m.createdAt}</td>
-                  <td>{m.updatedAt}</td>
-                  <td><Link href={`/data/${m.id}`}><a>refer</a></Link></td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </>
+        <DataList dataList={markdowns} />
     )
   }
 
   return (
     <>
-      <Layout>{renderDataCarousel(allMarkdowns.data)}</Layout>
+      <Layout>
+        <Link href={`/search`}>検索</Link>
+        {renderDataCarousel(allMarkdowns.data)}
+      </Layout>
     </>
   )
 }
@@ -53,7 +37,7 @@ export const getStaticProps: GetStaticProps = async () => {
   // TODO offset, sizeは変更できるように(もっとみる)
   // トップ10件取得し、静的ページを作成
   // 30秒でrevalidateな状態にし、静的ページを更新する
-  const allMarkdowns = await getAllMarkdowns(context, { offset: 0, size: 10 })
+  const allMarkdowns = await getAllMarkdowns(context, { sort: 'id', order: 'desc', offset: 0, size: 10 })
 
   return {
     props: {
