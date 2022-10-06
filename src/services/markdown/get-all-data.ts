@@ -51,10 +51,7 @@ const getAllMarkdowns = async (
   order && params.append('order', order)
   params.append('offset', `${offset}`)
   size && params.append('size', `${size}`)
-  
-  console.log('=====================================================================')
-  console.log(params)
-  
+
   const query = params.toString()
 
   return await fetcher(query.length > 0 ? `${path}?${query}` : path, {

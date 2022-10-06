@@ -1,5 +1,6 @@
 import type { ApiContext, Markdown } from '../../types/data'
 import useSWR from 'swr'
+import { fetcher } from 'utils'
 
 export type UseSearchProps = {
   /**
@@ -61,18 +62,20 @@ const useSearch = (
     size = 10,
   }: UseSearchProps = {},
 ): UseSearch => {
+  
   const path = `${context.apiRootUrl}/markdown/list.json`
   const params = new URLSearchParams()
 
   title && params.append('title', title)
-  sort && params.append('_sort', sort)
-  order && params.append('_order', order)
-  offset && params.append('_offset', `${offset}`)
-  size && params.append('_size', `${size}`)
+  sort && params.append('sort', sort)
+  order && params.append('order', order)
+  params.append('offset', `${offset}`)
+  size && params.append('size', `${size}`)
   const query = params.toString()
 
   const { data, error } = useSWR<Markdown[]>(
-    query.length > 0 ? `${path}?${query}` : path
+    query.length > 0 ? `${path}?${query}` : path,
+    fetcher
   )
 
   return {
