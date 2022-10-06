@@ -5,23 +5,26 @@ import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
 import { useRouter } from 'next/router'
 import DataList from 'components/organisms/DataList'
+import SearchPage from './search'
+import { useState } from 'react'
+import SearchFormContainer from 'containers/SearchFormContainer'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
 const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
 
-
   // データカルーセルをレンダリング
   const renderDataCarousel = (markdowns: Markdown[]) => {
     return (
-        <DataList dataList={markdowns} />
+      <>
+        <SearchPage dataList={markdowns} />
+      </>
     )
   }
 
   return (
     <>
       <Layout>
-        <Link href={`/search`}>検索</Link>
         {renderDataCarousel(allMarkdowns.data)}
       </Layout>
     </>
@@ -36,14 +39,14 @@ export const getStaticProps: GetStaticProps = async () => {
   // TODO お気に入り一覧等も取得する際は、Promis.allに置き換える
   // TODO offset, sizeは変更できるように(もっとみる)
   // トップ10件取得し、静的ページを作成
-  // 30秒でrevalidateな状態にし、静的ページを更新する
+  // revalidateな状態にし、静的ページを更新する
   const allMarkdowns = await getAllMarkdowns(context, { sort: 'id', order: 'desc', offset: 0, size: 10 })
 
   return {
     props: {
       allMarkdowns,
     },
-    revalidate: 30,
+    revalidate: 10,
   }
 }
 
