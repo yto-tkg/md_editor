@@ -1,13 +1,8 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import Link from 'next/link'
 import Layout from 'components/templates/Layout'
 import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
-import { useRouter } from 'next/router'
-import DataList from 'components/organisms/DataList'
 import SearchPage from './search'
-import { useState } from 'react'
-import SearchFormContainer from 'containers/SearchFormContainer'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
