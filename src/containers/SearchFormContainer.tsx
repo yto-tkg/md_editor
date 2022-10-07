@@ -1,6 +1,7 @@
 import { ApiContext, Markdown } from "types/data";
 import SearchForm, { SearchFormData } from "components/organisms/SearchForm"
 import getAllMarkdowns from "services/markdown/get-all-data";
+import DataList from "components/organisms/DataList";
 
 const context: ApiContext = {
   apiRootUrl: process.env.API_BASE_URL || '/api/proxy',
@@ -11,12 +12,17 @@ interface SearchFormContainerProps {
    * 検索ボタンが押下されたときのイベントハンドラ
    */
   onSubmit: (searchData: Markdown[], error?: Error) => void
+
+  /**
+   *データリスト
+   */
+  dataList: Markdown[]
 }
 
 /**
  * 検索フォームコンテナ
  */
-const SearchFormContainer = ({ onSubmit }: SearchFormContainerProps) => {
+const SearchFormContainer = ({ onSubmit, dataList }: SearchFormContainerProps) => {
 
   const handleSearch = async (data: SearchFormData) => {
     // 検索ボタン押下したとき
@@ -38,9 +44,13 @@ const SearchFormContainer = ({ onSubmit }: SearchFormContainerProps) => {
       }
     }
   }
-  
+
+  console.log('dataList: ' + dataList)
+
   return (
-    <SearchForm onSearchSubmit={handleSearch} />
+    <SearchForm onSearchSubmit={handleSearch}>
+      <DataList dataList={dataList} />
+    </SearchForm>
   )
 
 }
