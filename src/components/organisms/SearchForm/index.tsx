@@ -1,5 +1,7 @@
 import { red } from '@mui/material/colors'
 import { useForm } from 'react-hook-form'
+import { Markdown } from 'types/data'
+import DataList from '../DataList'
 
 export type SearchFormData = {
   title?: string
@@ -14,12 +16,17 @@ interface SearchFormProps {
    * 検索ボタンを押下したときのイベントハンドラ
    */
   onSearchSubmit?: (data: SearchFormData) => void
+  
+  /**
+   *子要素
+   */
+  children: React.ReactNode
 }
 
 /**
  * 検索フォーム
  */
-const SearchForm = ({ onSearchSubmit }: SearchFormProps) => {
+const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
   const {
     register,
     handleSubmit,
@@ -30,8 +37,9 @@ const SearchForm = ({ onSearchSubmit }: SearchFormProps) => {
     onSearchSubmit && onSearchSubmit(data)
   }
 
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>      
       <input
         {...register('title', {required: true})}
         name= "title"
@@ -43,6 +51,7 @@ const SearchForm = ({ onSearchSubmit }: SearchFormProps) => {
           <div style={{color: 'red'}}>Title is required.</div>
         )}
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
+      {children}
     </form>
   )
 }

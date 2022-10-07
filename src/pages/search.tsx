@@ -33,16 +33,14 @@ const SearchPage: NextPage<DataListProps> = ({ dataList }: DataListProps) => {
   if (!!data) {
     return (
       <>
-        <SearchFormContainer onSubmit={handleSubmit} />
-        <DataList dataList={data} />
+        <SearchFormContainer onSubmit={handleSubmit} dataList={data} />
       </>
     )
   } else {
     return (
       <>
         <Layout>
-          <SearchFormContainer onSubmit={handleSubmit} />
-          <DataList dataList={data} />
+          <SearchFormContainer onSubmit={handleSubmit} dataList={data} />
         </Layout>
       </>
     )
