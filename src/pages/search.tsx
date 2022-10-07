@@ -7,17 +7,21 @@ import { Markdown } from 'types/data'
 import Layout from '../components/templates/Layout'
 import SearchFormContainer from '../containers/SearchFormContainer'
 
-const SearchPage: NextPage = () => {
+interface DataListProps {
+  dataList: Markdown[]
+}
 
- // const router = useRouter()
- // const handleSubmit = (err?: Error) => {
- //   if (!err) {
- //     router.push(`/search`)
- //   }
- // }
-  
-  const [data, setData] = useState<Markdown[]>([])
- 
+const SearchPage: NextPage<DataListProps> = ({ dataList }: DataListProps) => {
+
+  // const router = useRouter()
+  // const handleSubmit = (err?: Error) => {
+  //   if (!err) {
+  //     router.push(`/search`)
+  //   }
+  // }
+
+  const [data, setData] = useState<Markdown[]>(dataList)
+
   const handleSubmit = (searchData: Markdown[], error?: Error) => {
     if (!!error) {
       alert(error)
@@ -26,14 +30,23 @@ const SearchPage: NextPage = () => {
     setData(searchData.data)
   }
 
-  return (
-    <>
-      <Layout>
+  if (!!data) {
+    return (
+      <>
         <SearchFormContainer onSubmit={handleSubmit} />
         <DataList dataList={data} />
-      </Layout>
-    </>
-  )
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Layout>
+          <SearchFormContainer onSubmit={handleSubmit} />
+          <DataList dataList={data} />
+        </Layout>
+      </>
+    )
+  }
 }
 
 export default SearchPage
