@@ -45,8 +45,6 @@ const SearchFormContainer = ({ onSubmit, dataList }: SearchFormContainerProps) =
     }
   }
 
-  console.log('dataList: ' + dataList)
-
   return (
     <SearchForm onSearchSubmit={handleSearch}>
       <DataList dataList={dataList} />
