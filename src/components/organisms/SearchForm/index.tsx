@@ -35,18 +35,24 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
   } = useForm<SearchFormData>()
 
   const [sort, setSort] = useState({})
+  const [searchContent, setSearchContent] = useState('')
 
- const onSubmit = (data: SearchFormData, sortKey?: string) => {
+  const setSearchData = (e: any) => {
+    e.preventDefault()
+    setSearchContent(e.target.value)
+  }
+
+  const onSubmit = (data: SearchFormData, sortKey?: string) => {
     if (!!sortKey && typeof sortKey === 'string') {
-      debugger;
-      if (sort.key ===  sortKey) {
-      setSort({...sort, order: -sort.order})
-    } else {
-      setSort({key: sortKey, order: 1})
-    }
+      if (sort.key === sortKey) {
+        setSort({ ...sort, order: -sort.order })
+      } else {
+        setSort({ key: sortKey, order: 1 })
+      }
       data.sort = sort.key
-      data.order = sort.order == 1 ? 'desc' : 'asc' 
+      data.order = sort.order == 1 ? 'desc' : 'asc'
     }
+    data.title = searchContent
     onSearchSubmit && onSearchSubmit(data)
   }
 
@@ -59,6 +65,7 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
         type="text"
         placeholder="Titleを検索"
         className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
+        onChange={setSearchData}
       />
       {errors.title && (
         <div style={{ color: 'red' }}>Title is required.</div>
@@ -66,12 +73,12 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
       <div className="flex p-4">
         <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'title')}>title</div>
-        <div className="flex-none w-40 h-14">content</div>
+        <div className="flex-none w-40 h-14" onSubmit={handleSubmit(onSubmit)}>content</div>
         <div className="flex-none w-72 h-14">register time</div>
         <div className="flex-none w-72 h-14">update time</div>
         <div className="flex-none w-32 h-14">refer</div>
       </div>
-        {children}
+      {children}
     </form>
   )
 }
