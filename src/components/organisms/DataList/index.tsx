@@ -1,4 +1,4 @@
-import type {Markdown} from '../../../types/data'
+import type { Markdown } from '../../../types/data'
 import Link from 'next/link'
 
 interface DataListProps {
@@ -11,32 +11,19 @@ interface DataListProps {
 /**
  * データ一覧
  */
-const DataList = ({dataList}: DataListProps) => {
+const DataList = ({ dataList }: DataListProps) => {
   return (
-      <>
-        <table>
-          <tbody>
-            <tr>
-              <th>title</th>
-              <th>content</th>
-              <th>register time</th>
-              <th>update time</th>
-              <th>refer</th>
-            </tr>
-          </tbody>
-          <tbody>
-            {dataList.map((m: Markdown, i: number) => (
-              <tr key={m.id}>
-                <td>{m.title}</td>
-                <td>{m.body}</td>
-                <td>{m.createdAt}</td>
-                <td>{m.updatedAt}</td>
-                <td><Link href={`/data/${m.id}`}><a>refer</a></Link></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </>
+    <>
+      {dataList.map((m: Markdown, i: number) => (
+        <div className='flex p-4' key={m.id}>
+          <div className='flex-none w-40 h-7'>{m.title}</div>
+          <div className='flex-none w-40 h-7'>{m.body}</div>
+          <div className='flex-none w-72 h-7'>{m.createdAt}</div>
+          <div className='flex-none w-72 h-7'>{m.updatedAt}</div>
+          <div className='flex-none w-32 h-7'><Link href={`/data/${m.id}`}><a>to refer</a></Link></div>
+        </div>
+      ))}
+    </>
   )
 }
 
