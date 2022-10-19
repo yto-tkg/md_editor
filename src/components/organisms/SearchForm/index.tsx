@@ -19,6 +19,11 @@ interface SearchFormProps {
   onSearchSubmit?: (data: SearchFormData) => void
 
   /**
+　 * 全データ件数
+   */
+  allDataCount: number
+
+  /**
    *子要素
    */
   children: React.ReactNode
@@ -27,7 +32,7 @@ interface SearchFormProps {
 /**
  * 検索フォーム
  */
-const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
+const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps) => {
   const {
     register,
     handleSubmit,
@@ -36,6 +41,8 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
 
   const [sort, setSort] = useState({})
   const [searchContent, setSearchContent] = useState('')
+  const [offset, setOffset] = useState(0)
+  const [size, setSize] = useState(10)
 
   const setSearchData = (e: any) => {
     e.preventDefault()
@@ -53,6 +60,9 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
       data.order = sort.order == 1 ? 'desc' : 'asc'
     }
     data.title = searchContent
+    data.offset = offset
+    data.size = size
+
     onSearchSubmit && onSearchSubmit(data)
   }
 
@@ -71,11 +81,17 @@ const SearchForm = ({ onSearchSubmit, children }: SearchFormProps) => {
         <div style={{ color: 'red' }}>Title is required.</div>
       )}
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
+
+      <div>
+        {offset} - {size} ({allDataCount}件中)
+        ← →
+      </div>
+
       <div className="flex p-4">
         <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'title')}>title</div>
-        <div className="flex-none w-40 h-14" onSubmit={handleSubmit(onSubmit)}>content</div>
-        <div className="flex-none w-72 h-14">register time</div>
-        <div className="flex-none w-72 h-14">update time</div>
+        <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'body')}>content</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'createdAt')}>register time</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'updatedAt')}>update time</div>
         <div className="flex-none w-32 h-14">refer</div>
       </div>
       {children}
