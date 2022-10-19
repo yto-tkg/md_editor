@@ -6,13 +6,13 @@ import SearchPage from './search'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
-const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
+const Home: NextPage<HomeProps> = ({ allMarkdowns, allMarkdownsCount }: HomeProps) => {
 
   // データカルーセルをレンダリング
-  const renderDataCarousel = (markdowns: Markdown[]) => {
+  const renderDataCarousel = (markdowns: Markdown[], allMarkdownsCount: number) => {
     return (
       <>
-        <SearchPage dataList={markdowns} />
+        <SearchPage dataList={markdowns} allDataCount={allMarkdownsCount} />
       </>
     )
   }
@@ -20,7 +20,7 @@ const Home: NextPage<HomeProps> = ({ allMarkdowns }: HomeProps) => {
   return (
     <>
       <Layout>
-        {renderDataCarousel(allMarkdowns.data)}
+        {renderDataCarousel(allMarkdowns.data, allMarkdownsCount)}
       </Layout>
     </>
   )
@@ -36,10 +36,14 @@ export const getStaticProps: GetStaticProps = async () => {
   // トップ10件取得し、静的ページを作成
   // revalidateな状態にし、静的ページを更新する
   const allMarkdowns = await getAllMarkdowns(context, { sort: 'id', order: 'desc', offset: 0, size: 10 })
+  const allMarkdownsCount = await getAllMarkdowns(context, {offset: 0, size: 10000}).then(res => {
+ return res.data.length
+  })
 
-  return {
+    return {
     props: {
       allMarkdowns,
+      allMarkdownsCount
     },
     revalidate: 10,
   }

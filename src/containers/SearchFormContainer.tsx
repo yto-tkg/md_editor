@@ -17,12 +17,17 @@ interface SearchFormContainerProps {
    *データリスト
    */
   dataList: Markdown[]
+
+  /**
+　 * 全データ件数
+   */
+  allDataCount: number
 }
 
 /**
  * 検索フォームコンテナ
  */
-const SearchFormContainer = ({ onSubmit, dataList }: SearchFormContainerProps) => {
+const SearchFormContainer = ({ onSubmit, dataList, allDataCount }: SearchFormContainerProps) => {
 
   const handleSearch = async (data: SearchFormData) => {
     // 検索ボタン押下したとき
@@ -46,7 +51,7 @@ const SearchFormContainer = ({ onSubmit, dataList }: SearchFormContainerProps) =
   }
 
   return (
-    <SearchForm onSearchSubmit={handleSearch}>
+    <SearchForm onSearchSubmit={handleSearch} allDataCount={allDataCount}>
       <DataList dataList={dataList} />
     </SearchForm>
   )
