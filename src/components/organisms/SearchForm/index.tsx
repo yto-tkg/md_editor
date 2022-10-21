@@ -19,7 +19,7 @@ interface SearchFormProps {
   onSearchSubmit?: (data: SearchFormData) => void
 
   /**
-　 * 全データ件数
+  * 全データ件数
    */
   allDataCount: number
 
@@ -43,24 +43,43 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [searchContent, setSearchContent] = useState('')
   const [offset, setOffset] = useState(0)
   const [size, setSize] = useState(10)
+  const [paging, setPaging] = useState(0)
 
   const setSearchData = (e: any) => {
     e.preventDefault()
     setSearchContent(e.target.value)
   }
 
-  const onSubmit = (data: SearchFormData, sortKey?: string) => {
+  const onSubmit = (data: SearchFormData, sortKey?: string, pagingKey?: number) => {
     if (!!sortKey && typeof sortKey === 'string') {
       if (sort.key === sortKey) {
         setSort({ ...sort, order: -sort.order })
+        data.order = -sort.order
       } else {
         setSort({ key: sortKey, order: 1 })
+        data.order = 1
       }
-      data.sort = sort.key
-      data.order = sort.order == 1 ? 'desc' : 'asc'
     }
+
+    let newOffset;
+    if (!!pagingKey) {
+      console.log('pagingKey: ', pagingKey)
+      setPaging(pagingKey)
+      console.log('paging: ', paging)
+      if (pagingKey == -1) {
+        newOffset = (offset - size) < 1 ? 0 : (offset - size)
+        console.log('newOffset: ', newOffset)
+        setOffset(newOffset)
+      } else {
+        newOffset = offset + size
+        console.log('else newOffset: ', newOffset)
+        setOffset(newOffset)
+      }
+    }
+
     data.title = searchContent
-    data.offset = offset
+    data.sort = sortKey
+    data.offset = newOffset
     data.size = size
 
     onSearchSubmit && onSearchSubmit(data)
@@ -83,8 +102,11 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
 
       <div>
-        {offset} - {size} ({allDataCount}件中)
-        ← →
+        {offset == 0 ? 1 : offset}
+        -
+        {offset == 0 ? offset + size : offset + size - 1 > allDataCount ? allDataCount : offset + size - 1} ({allDataCount}件中)
+        <span style={{ display: offset == 0 ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
+        <span style={{ display: offset + size - 1 == allDataCount ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
       </div>
 
       <div className="flex p-4">
