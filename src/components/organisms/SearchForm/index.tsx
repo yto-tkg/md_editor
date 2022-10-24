@@ -46,6 +46,9 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [paging, setPaging] = useState(0)
   const [displayOffset, setDisplayOffset] = useState(0)
   const [displayLimit, setDisplayLimit] = useState(0)
+  const [isDisplayPrevBtn, setIsDisplayPrevBtn] = useState('')
+  const [isDisplayNextBtn, setIsDisplayNextBtn] = useState('')
+
 
 
   const setSearchData = (e: any) => {
@@ -56,6 +59,11 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   useEffect(() => {
     setDisplayOffset(offset + 1)
     setDisplayLimit(offset == 0 ? offset + size : offset + size - 1 >= allDataCount ? allDataCount : offset + size)
+  }, [offset])
+
+  useEffect(() => {
+    setIsDisplayPrevBtn(offset == 0 ? 'none' : '')
+    setIsDisplayNextBtn(offset + size >= allDataCount ? 'none' : '')
   }, [offset])
 
   const onSubmit = (data: SearchFormData, sortKey?: string, pagingKey?: number) => {
@@ -107,8 +115,8 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
       <div>
         {displayOffset} - {displayLimit} ({allDataCount}件中)
-        <span style={{ display: offset == 0 ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
-        <span style={{ display: offset + size >= allDataCount ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
+        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
+        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
       </div>
 
       <div className="flex p-4">
