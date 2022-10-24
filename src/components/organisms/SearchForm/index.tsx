@@ -1,5 +1,5 @@
 import { red } from '@mui/material/colors'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Markdown } from 'types/data'
 import DataList from '../DataList'
@@ -44,11 +44,19 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [offset, setOffset] = useState(0)
   const [size, setSize] = useState(10)
   const [paging, setPaging] = useState(0)
+  const [displayOffset, setDisplayOffset] = useState(0)
+  const [displayLimit, setDisplayLimit] = useState(0)
+
 
   const setSearchData = (e: any) => {
     e.preventDefault()
     setSearchContent(e.target.value)
   }
+
+  useEffect(() => {
+    setDisplayOffset(offset + 1)
+    setDisplayLimit(offset == 0 ? offset + size : offset + size - 1 >= allDataCount ? allDataCount : offset + size)
+  }, [offset])
 
   const onSubmit = (data: SearchFormData, sortKey?: string, pagingKey?: number) => {
     if (!!sortKey && typeof sortKey === 'string') {
@@ -63,16 +71,12 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
     let newOffset;
     if (!!pagingKey) {
-      console.log('pagingKey: ', pagingKey)
       setPaging(pagingKey)
-      console.log('paging: ', paging)
       if (pagingKey == -1) {
         newOffset = (offset - size) < 1 ? 0 : (offset - size)
-        console.log('newOffset: ', newOffset)
         setOffset(newOffset)
       } else {
         newOffset = offset + size
-        console.log('else newOffset: ', newOffset)
         setOffset(newOffset)
       }
     }
@@ -102,11 +106,9 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
 
       <div>
-        {offset == 0 ? 1 : offset}
-        -
-        {offset == 0 ? offset + size : offset + size - 1 > allDataCount ? allDataCount : offset + size - 1} ({allDataCount}件中)
+        {displayOffset} - {displayLimit} ({allDataCount}件中)
         <span style={{ display: offset == 0 ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
-        <span style={{ display: offset + size - 1 == allDataCount ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
+        <span style={{ display: offset + size >= allDataCount ? 'none' : '' }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
       </div>
 
       <div className="flex p-4">
