@@ -8,10 +8,11 @@ import Layout from '../components/templates/Layout'
 import SearchFormContainer from '../containers/SearchFormContainer'
 
 interface DataListProps {
-  dataList: Markdown[]
+  dataList: Markdown[],
+  allDataCount: number
 }
 
-const SearchPage: NextPage<DataListProps> = ({ dataList }: DataListProps) => {
+const SearchPage: NextPage<DataListProps> = ({ dataList, allDataCount }: DataListProps) => {
 
   // const router = useRouter()
   // const handleSubmit = (err?: Error) => {
@@ -33,14 +34,14 @@ const SearchPage: NextPage<DataListProps> = ({ dataList }: DataListProps) => {
   if (!!data) {
     return (
       <>
-        <SearchFormContainer onSubmit={handleSubmit} dataList={data} />
+        <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allDataCount} />
       </>
     )
   } else {
     return (
       <>
         <Layout>
-          <SearchFormContainer onSubmit={handleSubmit} dataList={data} />
+          <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allDataCount} />
         </Layout>
       </>
     )
