@@ -29,6 +29,8 @@ interface SearchFormProps {
   children: React.ReactNode
 }
 
+const PAGE_SIZE = [10, 20, 30]
+
 /**
  * 検索フォーム
  */
@@ -50,7 +52,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [isDisplayNextBtn, setIsDisplayNextBtn] = useState('')
 
 
-
   const setSearchData = (e: any) => {
     e.preventDefault()
     setSearchContent(e.target.value)
@@ -66,18 +67,31 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     setIsDisplayNextBtn(offset + size >= allDataCount ? 'none' : '')
   }, [offset])
 
-  const onSubmit = (data: SearchFormData, sortKey?: string, pagingKey?: number) => {
+  const onSubmit = (data: SearchFormData) => {
+
+    data.title = searchContent
+    data.sort = sort.key
+    data.order = sort.order == 1 ? 'desc' : 'asc'
+    data.offset = offset
+    data.size = size
+
+    debugger;
+    onSearchSubmit && onSearchSubmit(data)
+  }
+
+  const onSubmitBySortKey = (data: SearchFormData, sortKey: string) => {
     if (!!sortKey && typeof sortKey === 'string') {
       if (sort.key === sortKey) {
         setSort({ ...sort, order: -sort.order })
-        data.order = -sort.order
       } else {
         setSort({ key: sortKey, order: 1 })
-        data.order = 1
       }
     }
 
-    let newOffset;
+    onSubmit(data)
+  }
+
+  const onSubmitByPaging = (data: SearchFormData, pagingKey: number) => {
     if (!!pagingKey) {
       setPaging(pagingKey)
       if (pagingKey == -1) {
@@ -89,12 +103,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
       }
     }
 
-    data.title = searchContent
-    data.sort = sortKey
-    data.offset = newOffset
-    data.size = size
-
-    onSearchSubmit && onSearchSubmit(data)
+    onSubmit(data)
   }
 
 
@@ -115,15 +124,15 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
       <div>
         {displayOffset} - {displayLimit} ({allDataCount}件中)
-        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
+        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
         <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
       </div>
 
       <div className="flex p-4">
-        <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'title')}>title</div>
-        <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'body')}>content</div>
-        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'createdAt')}>register time</div>
-        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'updatedAt')}>update time</div>
+        <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'title')}>title</div>
+        <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'body')}>content</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'createdAt')}>register time</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'updatedAt')}>update time</div>
         <div className="flex-none w-32 h-14">refer</div>
       </div>
       {children}
