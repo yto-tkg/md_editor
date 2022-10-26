@@ -1,4 +1,5 @@
 import { red } from '@mui/material/colors'
+import { argv0 } from 'process'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Markdown } from 'types/data'
@@ -68,41 +69,48 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   }, [offset])
 
   const onSubmit = (data: SearchFormData) => {
-
+    const dataOrder = data.order ?? sort.order
     data.title = searchContent
-    data.sort = sort.key
-    data.order = sort.order == 1 ? 'desc' : 'asc'
-    data.offset = offset
+    data.sort = data.sort ?? sort.key
+    data.order = dataOrder == 1 ? 'asc' : 'desc'
+    data.offset = data.offset ?? offset
     data.size = size
 
-    debugger;
     onSearchSubmit && onSearchSubmit(data)
   }
 
   const onSubmitBySortKey = (data: SearchFormData, sortKey: string) => {
-    if (!!sortKey && typeof sortKey === 'string') {
-      if (sort.key === sortKey) {
-        setSort({ ...sort, order: -sort.order })
-      } else {
-        setSort({ key: sortKey, order: 1 })
-      }
+    let newSortOrder
+    if (sort.key === sortKey) {
+      newSortOrder = -sort.order
+      setSort({ ...sort, order: newSortOrder })
+    } else {
+      newSortOrder = 1
+      setSort({ key: sortKey, order: newSortOrder })
     }
+
+    data.sort = sortKey
+    data.order = newSortOrder
+
+    setOffset(0)
+    data.offset = 0
 
     onSubmit(data)
   }
 
   const onSubmitByPaging = (data: SearchFormData, pagingKey: number) => {
-    if (!!pagingKey) {
-      setPaging(pagingKey)
-      if (pagingKey == -1) {
-        newOffset = (offset - size) < 1 ? 0 : (offset - size)
-        setOffset(newOffset)
-      } else {
-        newOffset = offset + size
-        setOffset(newOffset)
-      }
+    setPaging(pagingKey)
+
+    let newOffset
+    if (pagingKey == -1) {
+      newOffset = (offset - size) < 1 ? 0 : (offset - size)
+      setOffset(newOffset)
+    } else {
+      newOffset = offset + size
+      setOffset(newOffset)
     }
 
+    data.offset = newOffset
     onSubmit(data)
   }
 
@@ -125,7 +133,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
       <div>
         {displayOffset} - {displayLimit} ({allDataCount}件中)
         <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
-        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
+        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), 1)}>→</span>
       </div>
 
       <div className="flex p-4">
