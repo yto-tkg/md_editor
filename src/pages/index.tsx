@@ -31,16 +31,14 @@ export const getStaticProps: GetStaticProps = async () => {
     apiRootUrl: process.env.API_BASE_URL || 'http://localhost:8765',
   }
 
-  // TODO お気に入り一覧等も取得する際は、Promis.allに置き換える
-  // TODO offset, sizeは変更できるように(もっとみる)
   // トップ10件取得し、静的ページを作成
   // revalidateな状態にし、静的ページを更新する
   const allMarkdowns = await getAllMarkdowns(context, { sort: 'id', order: 'desc', offset: 0, size: 10 })
-  const allMarkdownsCount = await getAllMarkdowns(context, {offset: 0, size: 10000}).then(res => {
- return res.data.length
+  const allMarkdownsCount = await getAllMarkdowns(context, { offset: 0, size: 10000 }).then(res => {
+    return res.data.length
   })
 
-    return {
+  return {
     props: {
       allMarkdowns,
       allMarkdownsCount
