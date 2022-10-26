@@ -60,13 +60,28 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
   useEffect(() => {
     setDisplayOffset(offset + 1)
-    setDisplayLimit(offset == 0 ? offset + size : offset + size - 1 >= allDataCount ? allDataCount : offset + size)
-  }, [offset])
+
+    debugger;
+    const viewCount = offset + size
+    if (offset == 0) {
+      if (viewCount <= allDataCount) {
+        setDisplayLimit(viewCount)
+      } else {
+        setDisplayLimit(allDataCount)
+      }
+    } else {
+      if ((viewCount - 1) < allDataCount) {
+        setDisplayLimit(viewCount)
+      } else {
+        setDisplayLimit(allDataCount)
+      }
+    }
+  }, [offset, size])
 
   useEffect(() => {
     setIsDisplayPrevBtn(offset == 0 ? 'none' : '')
     setIsDisplayNextBtn(offset + size >= allDataCount ? 'none' : '')
-  }, [offset])
+  }, [offset, size])
 
   const onSubmit = (data: SearchFormData) => {
     const dataOrder = data.order ?? sort.order
@@ -74,7 +89,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     data.sort = data.sort ?? sort.key
     data.order = dataOrder == 1 ? 'asc' : 'desc'
     data.offset = data.offset ?? offset
-    data.size = size
+    data.size = data.size ?? size
 
     onSearchSubmit && onSearchSubmit(data)
   }
@@ -114,6 +129,17 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     onSubmit(data)
   }
 
+  const onDisplaySizeChange = (data: SearchFormData, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSize = Number(e.target.value)
+    setSize(newSize)
+    setOffset(0)
+
+    data.size = newSize
+    data.offset = 0
+
+    onSubmit(data)
+  }
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -134,6 +160,10 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
         {displayOffset} - {displayLimit} ({allDataCount}件中)
         <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
         <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), 1)}>→</span>
+        <span className='ml-5'>表示件数:</span>
+        <select onChange={(e) => onDisplaySizeChange(handleSubmit(onsubmit), e)}>
+          {PAGE_SIZE.map(page_size => <option value={page_size}>{page_size}</option>)}
+        </select>
       </div>
 
       <div className="flex p-4">
