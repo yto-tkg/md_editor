@@ -1,4 +1,5 @@
 import { red } from '@mui/material/colors'
+import { argv0 } from 'process'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Markdown } from 'types/data'
@@ -29,6 +30,8 @@ interface SearchFormProps {
   children: React.ReactNode
 }
 
+const PAGE_SIZE = [10, 20, 30]
+
 /**
  * 検索フォーム
  */
@@ -50,7 +53,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [isDisplayNextBtn, setIsDisplayNextBtn] = useState('')
 
 
-
   const setSearchData = (e: any) => {
     e.preventDefault()
     setSearchContent(e.target.value)
@@ -66,35 +68,50 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     setIsDisplayNextBtn(offset + size >= allDataCount ? 'none' : '')
   }, [offset])
 
-  const onSubmit = (data: SearchFormData, sortKey?: string, pagingKey?: number) => {
-    if (!!sortKey && typeof sortKey === 'string') {
-      if (sort.key === sortKey) {
-        setSort({ ...sort, order: -sort.order })
-        data.order = -sort.order
-      } else {
-        setSort({ key: sortKey, order: 1 })
-        data.order = 1
-      }
-    }
-
-    let newOffset;
-    if (!!pagingKey) {
-      setPaging(pagingKey)
-      if (pagingKey == -1) {
-        newOffset = (offset - size) < 1 ? 0 : (offset - size)
-        setOffset(newOffset)
-      } else {
-        newOffset = offset + size
-        setOffset(newOffset)
-      }
-    }
-
+  const onSubmit = (data: SearchFormData) => {
+    const dataOrder = data.order ?? sort.order
     data.title = searchContent
-    data.sort = sortKey
-    data.offset = newOffset
+    data.sort = data.sort ?? sort.key
+    data.order = dataOrder == 1 ? 'asc' : 'desc'
+    data.offset = data.offset ?? offset
     data.size = size
 
     onSearchSubmit && onSearchSubmit(data)
+  }
+
+  const onSubmitBySortKey = (data: SearchFormData, sortKey: string) => {
+    let newSortOrder
+    if (sort.key === sortKey) {
+      newSortOrder = -sort.order
+      setSort({ ...sort, order: newSortOrder })
+    } else {
+      newSortOrder = 1
+      setSort({ key: sortKey, order: newSortOrder })
+    }
+
+    data.sort = sortKey
+    data.order = newSortOrder
+
+    setOffset(0)
+    data.offset = 0
+
+    onSubmit(data)
+  }
+
+  const onSubmitByPaging = (data: SearchFormData, pagingKey: number) => {
+    setPaging(pagingKey)
+
+    let newOffset
+    if (pagingKey == -1) {
+      newOffset = (offset - size) < 1 ? 0 : (offset - size)
+      setOffset(newOffset)
+    } else {
+      newOffset = offset + size
+      setOffset(newOffset)
+    }
+
+    data.offset = newOffset
+    onSubmit(data)
   }
 
 
@@ -115,15 +132,15 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
       <div>
         {displayOffset} - {displayLimit} ({allDataCount}件中)
-        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, -1)}>←</span>
-        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmit(handleSubmit(onSubmit), null, 1)}>→</span>
+        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
+        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), 1)}>→</span>
       </div>
 
       <div className="flex p-4">
-        <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'title')}>title</div>
-        <div className="flex-none w-40 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'body')}>content</div>
-        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'createdAt')}>register time</div>
-        <div className="flex-none w-72 h-14" onClick={() => onSubmit(handleSubmit(onSubmit), 'updatedAt')}>update time</div>
+        <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'title')}>title</div>
+        <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'body')}>content</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'createdAt')}>register time</div>
+        <div className="flex-none w-72 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'updatedAt')}>update time</div>
         <div className="flex-none w-32 h-14">refer</div>
       </div>
       {children}
