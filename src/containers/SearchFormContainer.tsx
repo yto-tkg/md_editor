@@ -19,7 +19,7 @@ interface SearchFormContainerProps {
   dataList: Markdown[]
 
   /**
-　 * 全データ件数
+  * 全データ件数
    */
   allDataCount: number
 }
@@ -41,7 +41,16 @@ const SearchFormContainer = ({ onSubmit, dataList, allDataCount }: SearchFormCon
 
     try {
       const markdowns = await getAllMarkdowns(context, { ...searchData })
-      onSubmit && onSubmit(markdowns, undefined)
+
+      if (!!searchData.title) {
+        searchData.offset = 0
+        searchData.size = 10000
+        allDataCount = await getAllMarkdowns(context, { ...searchData }).then((res) => {
+          return res.data.length
+        })
+      }
+
+      onSubmit && onSubmit(markdowns, allDataCount, undefined)
     } catch (err: unknown) {
       if (err instanceof Error) {
         window.alert(err.message)
