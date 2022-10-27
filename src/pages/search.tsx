@@ -22,26 +22,28 @@ const SearchPage: NextPage<DataListProps> = ({ dataList, allDataCount }: DataLis
   // }
 
   const [data, setData] = useState<Markdown[]>(dataList)
+  const [allCount, setAllCount] = useState(allDataCount)
 
-  const handleSubmit = (searchData: Markdown[], error?: Error) => {
+  const handleSubmit = (searchData: Markdown[], count?: number, error?: Error) => {
     if (!!error) {
       alert(error)
     }
 
     setData(searchData.data)
+    setAllCount(count ?? allCount)
   }
 
   if (!!data) {
     return (
       <>
-        <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allDataCount} />
+        <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allCount} />
       </>
     )
   } else {
     return (
       <>
         <Layout>
-          <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allDataCount} />
+          <SearchFormContainer onSubmit={handleSubmit} dataList={data} allDataCount={allCount} />
         </Layout>
       </>
     )
