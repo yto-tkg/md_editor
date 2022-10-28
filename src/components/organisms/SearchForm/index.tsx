@@ -42,7 +42,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     formState: { errors },
   } = useForm<SearchFormData>()
 
-  console.log('searchform: ', allDataCount)
   const [sort, setSort] = useState({})
   const [searchContent, setSearchContent] = useState('')
   const [offset, setOffset] = useState(0)
@@ -89,7 +88,15 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
 
   const onSubmit = (data: SearchFormData) => {
     const dataOrder = data.order ?? sort.order
-    data.title = searchContent
+   
+    if (!!data.title && data.title !== searchContent) {
+      data.offset = 0
+      setOffset(0)
+    }
+
+    setSearchContent(data.title ?? searchContent)
+   
+    data.title = data.title ?? searchContent
     data.sort = data.sort ?? sort.key
     data.order = dataOrder == 1 ? 'asc' : 'desc'
     data.offset = data.offset ?? offset
@@ -153,7 +160,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
         type="text"
         placeholder="Titleを検索"
         className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
-        onChange={setSearchData}
       />
       {errors.title && (
         <div style={{ color: 'red' }}>Title is required.</div>
