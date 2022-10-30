@@ -15,7 +15,7 @@ const DataList = ({ dataList }: DataListProps) => {
   return (
     <>
       {dataList.map((m: Markdown, i: number) => (
-        <div className='flex p-4' key={m.id}>
+        <div className='flex p-4' key={m.id} style={{ textAlign: 'center', color: '#b3b3b3' }}>
           <div className='flex-none w-40 h-7'>{m.title}</div>
           <div className='flex-none w-40 h-7'>{m.body}</div>
           <div className='flex-none w-72 h-7'>{m.createdAt}</div>
