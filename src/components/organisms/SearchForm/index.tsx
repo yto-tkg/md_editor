@@ -159,6 +159,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
         name="title"
         type="text"
         placeholder="Titleを検索"
+        style={{color: 'black'}}
         className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
       />
       {errors.title && (
@@ -166,17 +167,17 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
       )}
       <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
 
-      <div>
-        {displayOffset} - {displayLimit} ({displayAllCount}件中)
-        <span style={{ display: isDisplayPrevBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
-        <span style={{ display: isDisplayNextBtn }} onClick={() => onSubmitByPaging(handleSubmit(onSubmit), 1)}>→</span>
-        <span className='ml-5'>表示件数:</span>
-        <select onChange={(e) => onDisplaySizeChange(handleSubmit(onsubmit), e)}>
+      <div className='pl-10'>
+        <span style={{fontWeight: 'bold'}}>{displayOffset} - {displayLimit} ({displayAllCount}件中)</span>
+        <span style={{ display: isDisplayPrevBtn, fontWeight: 'bold' }} className='ml-4' onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
+        <span style={{ display: isDisplayNextBtn, fontWeight: 'bold' }} className='ml-4' onClick={() => onSubmitByPaging(handleSubmit(onSubmit), 1)}>→</span>
+        <select onChange={(e) => onDisplaySizeChange(handleSubmit(onsubmit), e)}
+          className='submit-post ml-4 h-6 w-12 rounded-md font-bold hover:opacity-70' style={{color: 'black'}}>
           {PAGE_SIZE.map(page_size => <option value={page_size}>{page_size}</option>)}
         </select>
       </div>
 
-      <div className="flex p-4">
+      <div className="flex p-4" style={{textAlign: 'center', fontWeight: 'bold', borderBottom: '0.5px solid #b3b3b3', lineHeight: '59px'}}>
         <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'title')}>title</div>
         <div className="flex-none w-40 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'body')}>content</div>
         <div className="flex-none w-72 h-14" onClick={() => onSubmitBySortKey(handleSubmit(onSubmit), 'createdAt')}>register time</div>

@@ -5,7 +5,7 @@ const Header = () => {
     <>
       <div className="pl-9 pt-9">
         <a
-          href="#"
+          href="/"
           className="flex items-center justify-center rounded-full transition duration-500 hover:bg-white hover:shadow-xl"
           style={{ width: '50px', height: '50px' }}
         >
