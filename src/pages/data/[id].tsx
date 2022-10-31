@@ -1,9 +1,9 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetStaticPropsContext } from 'next'
 import { useRouter } from 'next/router'
 import Layout from 'components/templates/Layout'
 import PostFormContainer from 'containers/PostFormContainer'
 
-const Home: NextPage = () => {
+const DataPage: NextPage = () => {
   const router = useRouter()
 
   const handleSave = (err?: Error) => {
@@ -21,4 +21,9 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export const getStaticProps = async ({params}: GetStaticPropsContext) => {
+  
+  const dataId = Number(params.id)
+}
+
+export default DataPage

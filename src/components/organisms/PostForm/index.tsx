@@ -41,7 +41,7 @@ const PostForm = ({ onPostSave }: PostFormProps) => {
     <>
       <h1 className="py-10 text-center text-4xl font-bold">markdown note</h1>
       <div className="editor shrink grow">
-        <form className="h-full" onSubmit={handleSubmit(onSubmit)}>
+        <form className="h-full" onSubmit={handleSubmit(onSubmit)} style={{ color: 'black' }}>
           <input
             {...register('title', { required: true })}
             name="title"
