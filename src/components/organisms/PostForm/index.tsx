@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { Markdown } from 'types/data'
 import PostPreview from '../PostPreview'
 
 export type PostFormData = {
@@ -12,12 +13,17 @@ interface PostFormProps {
    * 保存ボタンを押下した時のイベントハンドラ
    */
   onPostSave?: (data: PostFormData) => void
+
+  /*
+   * データ 
+   */
+  data?: Markdown
 }
 
 /**
  * 投稿フォーム
  */
-const PostForm = ({ onPostSave }: PostFormProps) => {
+const PostForm = ({ onPostSave, data }: PostFormProps) => {
   // React Hook Formの使用
   const {
     register,
@@ -29,7 +35,14 @@ const PostForm = ({ onPostSave }: PostFormProps) => {
     onPostSave && onPostSave(data)
   }
 
-  const [markdown, setMarkdown] = useState()
+  const initialData = {
+    title: data?.title,
+    body: data?.body,
+    createdAt: data?.createdAt,
+    updatedAt: data?.updatedAt,
+  }
+
+  const [markdown, setMarkdown] = useState(initialData.body)
 
   const setData = (e: any) => {
     e.preventDefault()
@@ -49,6 +62,7 @@ const PostForm = ({ onPostSave }: PostFormProps) => {
             id="post-title"
             placeholder="Title"
             className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
+            value={initialData.title}
           //hasError={!!errors.title}
           />
           {errors.title && (

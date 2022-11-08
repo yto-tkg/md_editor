@@ -1,9 +1,10 @@
-import type { NextPage, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+import type { NextPage, GetStaticPropsContext, InferGetStaticPropsType, GetStaticPaths } from 'next'
 import { useRouter } from 'next/router'
 import Layout from 'components/templates/Layout'
 import PostFormContainer from 'containers/PostFormContainer'
-import { ApiContext } from 'types/data'
+import { ApiContext, Markdown } from 'types/data'
 import getMarkdown from 'services/markdown/get-data'
+import getAllMarkdowns from 'services/markdown/get-all-data'
 
 type DataPageProps = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -12,6 +13,10 @@ const DataPage: NextPage<DataPageProps> = ({
   data
 }: DataPageProps) => {
   const router = useRouter()
+
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
 
   const handleSave = (err?: Error) => {
     if (!err) {
@@ -22,15 +27,27 @@ const DataPage: NextPage<DataPageProps> = ({
   return (
     <>
       <Layout>
-        <PostFormContainer onSave={handleSave} />
+        <PostFormContainer onSave={handleSave} data={data} />
       </Layout>
     </>
   )
 }
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  const context: ApiContext = {
+    apiRootUrl: process.env.API_BASE_URL || '/api/proxy',
+  }
+
+  const allMarkdowns = await getAllMarkdowns(context, { offset: 0, size: 10000 }).then(res => {return res.data})
+  const paths = allMarkdowns.map((m: Markdown[]) => `/data/${m.id}`)
+
+  return {paths, fallback: true}
+
+}
+
 export const getStaticProps = async ({params}: GetStaticPropsContext) => {
   
-  if (!params || typeof params.id !== 'number') {
+  if (!params) {
     throw new Error('param is illegal')
   }
 

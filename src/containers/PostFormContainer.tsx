@@ -11,12 +11,17 @@ interface PostFormContainerProps {
    * 保存されたときのイベントハンドラ
    */
   onSave?: (error?: Error, markdown?: Markdown) => void
+
+  /**
+   * データ
+   */
+  data?: Markdown
 }
 
 /**
  * 保存フォームコンテナ
  */
-const PostFormContainer = ({ onSave }: PostFormContainerProps) => {
+const PostFormContainer = ({ onSave, data }: PostFormContainerProps) => {
   // TODO 認証ガード
   // TODO ローディング
 
@@ -40,7 +45,7 @@ const PostFormContainer = ({ onSave }: PostFormContainerProps) => {
     }
   }
 
-  return <PostForm onPostSave={handleSave} />
+  return <PostForm onPostSave={handleSave} data={data} />
 }
 
 export default PostFormContainer
