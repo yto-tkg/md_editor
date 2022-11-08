@@ -62,7 +62,7 @@ const useSearch = (
     size = 10,
   }: UseSearchProps = {},
 ): UseSearch => {
-  
+
   const path = `${context.apiRootUrl}/markdown/list.json`
   const params = new URLSearchParams()
 
