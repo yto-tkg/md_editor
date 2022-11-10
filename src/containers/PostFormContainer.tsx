@@ -1,5 +1,6 @@
 import PostForm, { PostFormData } from 'components/organisms/PostForm'
 import addMarkdown from 'services/markdown/post-data'
+import updateMarkdown from 'services/markdown/put-data'
 import { ApiContext, Markdown } from 'types/data'
 
 const context: ApiContext = {
@@ -26,16 +27,22 @@ const PostFormContainer = ({ onSave, data }: PostFormContainerProps) => {
   // TODO ローディング
 
   // 保存ボタン押下した時
-  const handleSave = async (data: PostFormData) => {
+  const handleSave = async (formData: PostFormData) => {
     // TODO 認証チェック
 
+    const putData = {
+      id: Number(data?.id),
+      title: formData.title,
+      body: formData.body
+    }
+
     const postData = {
-      title: data.title,
-      body: data.body,
+      title: formData.title,
+      body: formData.body,
     }
 
     try {
-      const res = await addMarkdown(context, { postData })
+      const res = !!data.id ? await updateMarkdown(context, {putData}) : await addMarkdown(context, { postData })
       onSave && onSave(undefined, res)
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -45,7 +52,7 @@ const PostFormContainer = ({ onSave, data }: PostFormContainerProps) => {
     }
   }
 
-  return <PostForm onPostSave={handleSave} data={data} />
+  return <PostForm onPostSave={handleSave} referData={data} />
 }
 
 export default PostFormContainer

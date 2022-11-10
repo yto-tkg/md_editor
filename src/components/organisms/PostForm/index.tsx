@@ -4,6 +4,7 @@ import { Markdown } from 'types/data'
 import PostPreview from '../PostPreview'
 
 export type PostFormData = {
+  id?: number
   title: string
   body: string
 }
@@ -17,13 +18,13 @@ interface PostFormProps {
   /*
    * データ 
    */
-  data?: Markdown
+  referData?: Markdown
 }
 
 /**
  * 投稿フォーム
  */
-const PostForm = ({ onPostSave, data }: PostFormProps) => {
+const PostForm = ({ onPostSave, referData }: PostFormProps) => {
   // React Hook Formの使用
   const {
     register,
@@ -36,10 +37,11 @@ const PostForm = ({ onPostSave, data }: PostFormProps) => {
   }
 
   const initialData = {
-    title: data?.title,
-    body: data?.body,
-    createdAt: data?.createdAt,
-    updatedAt: data?.updatedAt,
+    id: referData?.id,
+    title: referData?.title,
+    body: referData?.body,
+    createdAt: referData?.createdAt,
+    updatedAt: referData?.updatedAt,
   }
 
   const [markdown, setMarkdown] = useState(initialData.body)
@@ -76,7 +78,7 @@ const PostForm = ({ onPostSave, data }: PostFormProps) => {
                 id="md"
                 placeholder="Markdownで記述"
                 className="markdown-form mb-5 h-full w-full resize-none rounded-xl border py-4 px-2 shadow-xl focus:outline-none"
-                style={{ minHeight: '1000px' }}
+                style={{ minHeight: '300px' }}
                 value={markdown}
                 //hasError={!!error}
                 onChange={setData}
@@ -89,6 +91,7 @@ const PostForm = ({ onPostSave, data }: PostFormProps) => {
               <PostPreview markdown={markdown} />
             </div>
           </div>
+          <input type="hidden" value={initialData.id} />
           <input
             type="submit"
             className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70"
