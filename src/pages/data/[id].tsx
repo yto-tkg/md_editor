@@ -58,7 +58,7 @@ export const getStaticProps = async ({params}: GetStaticPropsContext) => {
   // データを取得し、静的ページを作成
   // 10秒でstaleな状態にし、静的ページを更新する
   const dataId = Number(params.id)
-  const data = await getMarkdown(context, {id: dataId}) 
+  const data = await getMarkdown(context, {id: dataId})
 
   return {
     props: {
