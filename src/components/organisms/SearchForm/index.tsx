@@ -42,7 +42,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [searchContent, setSearchContent] = useState('')
   const [offset, setOffset] = useState(0)
   const [size, setSize] = useState(10)
-  const [paging, setPaging] = useState(0)
   const [displayOffset, setDisplayOffset] = useState(0)
   const [displayLimit, setDisplayLimit] = useState(0)
   const [isDisplayPrevBtn, setIsDisplayPrevBtn] = useState('')
@@ -117,8 +116,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   }
 
   const onSubmitByPaging = (data: SearchFormData, pagingKey: number) => {
-    setPaging(pagingKey)
-
     let newOffset
     if (pagingKey == -1) {
       newOffset = (offset - size) < 1 ? 0 : (offset - size)
