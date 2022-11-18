@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -140,22 +141,29 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     onSubmit(data)
   }
 
+  const InputTitle = React.memo(() => {
+    return (
+      <>
+        <input
+          {...register('title', { required: true })}
+          name="title"
+          type="text"
+          placeholder="Titleを検索"
+          style={{ color: 'black' }}
+          className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
+        />
+        {errors.title && (
+          <div style={{ color: 'red' }}>Title is required.</div>
+        )}
+        <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
+      </>
+    )
+  })
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        {...register('title', { required: true })}
-        name="title"
-        type="text"
-        placeholder="Titleを検索"
-        style={{ color: 'black' }}
-        className="mx-auto mb-8 block h-14 w-4/5 rounded-lg border px-5 text-2xl font-bold shadow-lg focus:outline-none"
-      />
-      {errors.title && (
-        <div style={{ color: 'red' }}>Title is required.</div>
-      )}
-      <input type="submit" className="submit-post my-8 mx-auto block h-10 w-36 rounded-md font-bold hover:opacity-70" />
-
+      <InputTitle />
       <div className='pl-10'>
         <span style={{ fontWeight: 'bold' }}>{displayOffset} - {displayLimit} ({displayAllCount}件中)</span>
         <span style={{ display: isDisplayPrevBtn, fontWeight: 'bold' }} className='ml-4' onClick={() => onSubmitByPaging(handleSubmit(onSubmit), -1)}>←</span>
