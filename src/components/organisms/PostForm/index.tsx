@@ -22,6 +22,13 @@ interface PostFormProps {
   referData?: Markdown
 }
 
+const Label = React.memo(() => {
+  return (
+    <h1 className="py-10 text-center text-4xl font-bold">markdown note</h1>
+  )
+})
+
+
 /**
  * 投稿フォーム
  */
@@ -53,13 +60,7 @@ const PostForm = ({ onPostSave, referData }: PostFormProps) => {
     setMarkdown(e.target.value)
   }
 
-  const Label = React.memo(() => {
-    console.log('111')
-    return (
-      <h1 className="py-10 text-center text-4xl font-bold">markdown note</h1>
-    )
-  })
-
+  
   const Title = () => {
     return (
       <>
@@ -80,7 +81,7 @@ const PostForm = ({ onPostSave, referData }: PostFormProps) => {
     )
   }
 
-  const InputForm = React.memo(() => {
+  const InputForm = () => {
     return (
       <form className="h-full" onSubmit={handleSubmit(onSubmit)} style={{ color: 'black' }}>
         <Title />
@@ -112,7 +113,7 @@ const PostForm = ({ onPostSave, referData }: PostFormProps) => {
         />
       </form>
     )
-  })
+  }
 
   return (
     <>
