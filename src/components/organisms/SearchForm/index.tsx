@@ -142,7 +142,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   }
 
   const InputTitle = useCallback(() => {
-    console.log('tes');
     return (
       <>
         <input
@@ -161,7 +160,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     )
   }, [displayAllCount])
 
-  const SearchFormBox = React.memo(() => {
+  const SearchFormBox = () => {
     return (
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputTitle />
@@ -185,7 +184,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
         {children}
       </form>
     )
-  })
+  }
 
 
   return (
