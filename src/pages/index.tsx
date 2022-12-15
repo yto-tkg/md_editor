@@ -3,25 +3,29 @@ import Layout from 'components/templates/Layout'
 import getAllMarkdowns from 'services/markdown/get-all-data'
 import { ApiContext, Markdown } from 'types/data'
 import SearchPage from './search'
+import React from 'react'
 
 type HomeProps = InferGetStaticPropsType<typeof getStaticProps>
 
-const Home: NextPage<HomeProps> = ({ allMarkdowns, allMarkdownsCount }: HomeProps) => {
+export const AllCountContext = React.createContext(0)
 
+const Home: NextPage<HomeProps> = ({ allMarkdowns, allMarkdownsCount }: HomeProps) => {
   // データカルーセルをレンダリング
-  const renderDataCarousel = (markdowns: Markdown[], allMarkdownsCount: number) => {
+  const renderDataCarousel = (markdowns: Markdown[]) => {
     return (
       <>
-        <SearchPage dataList={markdowns} allDataCount={allMarkdownsCount} />
+        <SearchPage dataList={markdowns} />
       </>
     )
   }
 
   return (
     <>
-      <Layout>
-        {renderDataCarousel(allMarkdowns.data, allMarkdownsCount)}
-      </Layout>
+      <AllCountContext.Provider value={allMarkdownsCount}>
+        <Layout>
+          {renderDataCarousel(allMarkdowns.data)}
+        </Layout>
+      </AllCountContext.Provider>
     </>
   )
 }
