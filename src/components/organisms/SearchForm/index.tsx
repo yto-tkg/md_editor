@@ -16,9 +16,6 @@ interface SearchFormProps {
    */
   onSearchSubmit?: (data: SearchFormData) => void
 
-  /**
-  * 全データ件数
-   */
   allDataCount: number
 
   /**
@@ -48,7 +45,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   const [isDisplayPrevBtn, setIsDisplayPrevBtn] = useState('')
   const [isDisplayNextBtn, setIsDisplayNextBtn] = useState('')
   const [displayAllCount, setDisplayAllCount] = useState(allDataCount)
-
 
   useEffect(() => {
     setDisplayAllCount(allDataCount)
@@ -142,7 +138,6 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   }
 
   const InputTitle = useCallback(() => {
-    console.log('InputTitle')
     return (
       <>
         <input

@@ -2,6 +2,8 @@ import { ApiContext, Markdown } from "types/data";
 import SearchForm, { SearchFormData } from "components/organisms/SearchForm"
 import getAllMarkdowns from "services/markdown/get-all-data";
 import DataList from "components/organisms/DataList";
+import { useContext } from "react";
+import { AllCountContext } from "pages";
 
 const context: ApiContext = {
   apiRootUrl: process.env.API_BASE_URL || '/api/proxy',
@@ -19,7 +21,7 @@ interface SearchFormContainerProps {
   dataList: Markdown[]
 
   /**
-  * 全データ件数
+   *全データ件数
    */
   allDataCount: number
 }
@@ -27,8 +29,7 @@ interface SearchFormContainerProps {
 /**
  * 検索フォームコンテナ
  */
-const SearchFormContainer = ({ onSubmit, dataList, allDataCount }: SearchFormContainerProps) => {
-
+const SearchFormContainer = ({ onSubmit, dataList, allDataCount}: SearchFormContainerProps) => {
   const handleSearch = async (data: SearchFormData) => {
     // 検索ボタン押下したとき
     const searchData = {
