@@ -78,7 +78,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     setIsDisplayNextBtn(offset + size >= displayAllCount ? 'none' : '')
   }, [offset, size, displayAllCount])
 
-  const onSubmit = (data: SearchFormData) => {
+  const onSubmit = useCallback((data: SearchFormData) => {
     const dataOrder = data.order ?? sort.order
 
     if (!!data.title && data.title !== searchContent) {
@@ -95,7 +95,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
     data.size = data.size ?? size
 
     onSearchSubmit && onSearchSubmit(data)
-  }
+  }, [])
 
   const onSubmitBySortKey = (data: SearchFormData, sortKey: string) => {
     let newSortOrder
@@ -142,6 +142,7 @@ const SearchForm = ({ onSearchSubmit, allDataCount, children }: SearchFormProps)
   }
 
   const InputTitle = useCallback(() => {
+    console.log('InputTitle')
     return (
       <>
         <input
